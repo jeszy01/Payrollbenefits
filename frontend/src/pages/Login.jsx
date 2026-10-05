@@ -3,9 +3,16 @@ import { Eye, EyeOff, Lock, Loader2 } from 'lucide-react'
 import { login } from '../api.js'
 import './Login.css'
 
+import { useState } from 'react'
+import { Eye, EyeOff, Lock, Loader2 } from 'lucide-react'
+import { login, verifyOtp } from '../api.js'
+import './Login.css'
+
 export default function Login({ onSignedIn }) {
   const [employeeId, setEmployeeId] = useState('')
   const [password, setPassword] = useState('')
+  const [code, setCode] = useState('')
+  const [step, setStep] = useState('credentials')
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -15,7 +22,12 @@ export default function Login({ onSignedIn }) {
     setError('')
     setLoading(true)
     try {
-      onSignedIn(await login(employeeId.trim(), password))
+      if (step === 'credentials') {
+        await login(employeeId.trim(), password)
+        setStep('code')
+      } else {
+        onSignedIn(await verifyOtp(employeeId.trim(), code.trim()))
+      }
     } catch (err) {
       setError(err.message)
     } finally {
@@ -50,44 +62,66 @@ export default function Login({ onSignedIn }) {
           <h2>Welcome back</h2>
           <p className="form__lead">Sign in to your account to continue</p>
 
-          <label htmlFor="employeeId">Employee ID <span className="req">*</span></label>
-          <input
-            id="employeeId"
-            autoFocus
-            autoComplete="username"
-            placeholder="Enter your employee ID"
-            value={employeeId}
-            onChange={(e) => setEmployeeId(e.target.value)}
-            required
-          />
+         {step === 'credentials' ? (
+  <>
+    <label htmlFor="employeeId">Employee ID <span className="req">*</span></label>
+    <input
+      id="employeeId"
+      autoFocus
+      autoComplete="username"
+      placeholder="Enter your employee ID"
+      value={employeeId}
+      onChange={(e) => setEmployeeId(e.target.value)}
+      required
+    />
 
-          <label htmlFor="password">Password <span className="req">*</span></label>
-          <div className="field">
-            <input
-              id="password"
-              type={show ? 'text' : 'password'}
-              autoComplete="current-password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              className="field__eye"
-              onClick={() => setShow((s) => !s)}
-              aria-label={show ? 'Hide password' : 'Show password'}
-            >
-              {show ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
-          </div>
+    <label htmlFor="password">Password <span className="req">*</span></label>
+    <div className="field">
+      <input
+        id="password"
+        type={show ? 'text' : 'password'}
+        autoComplete="current-password"
+        placeholder="Enter your password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <button
+        type="button"
+        className="field__eye"
+        onClick={() => setShow((s) => !s)}
+        aria-label={show ? 'Hide password' : 'Show password'}
+      >
+        {show ? <EyeOff size={16} /> : <Eye size={16} />}
+      </button>
+    </div>
+  </>
+) : (
+  <>
+    <label htmlFor="code">Verification code <span className="req">*</span></label>
+    <input
+      id="code"
+      autoFocus
+      inputMode="numeric"
+      maxLength={6}
+      autoComplete="one-time-code"
+      placeholder="Enter the 6-digit code"
+      value={code}
+      onChange={(e) => setCode(e.target.value)}
+      required
+    />
+  </>
+)}
 
-          {error && <p className="form__error" role="alert">{error}</p>}
+{error && <p className="form__error" role="alert">{error}</p>}
 
-          <button className="submit" disabled={loading || !employeeId || !password}>
-            {loading ? <Loader2 size={16} className="spin" /> : <Lock size={16} />}
-            {loading ? 'Signing in…' : 'Sign in'}
-          </button>
+<button
+  className="submit"
+  disabled={loading || (step === 'credentials' ? !employeeId || !password : code.length !== 6)}
+>
+  {loading ? <Loader2 size={16} className="spin" /> : <Lock size={16} />}
+  {loading ? 'Please wait…' : step === 'credentials' ? 'Sign in' : 'Verify'}
+</button>
 
           <p className="form__note">
             No account yet? Ask your administrator to create one via the backend.

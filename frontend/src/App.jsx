@@ -1,31 +1,44 @@
-import { useState } from 'react'
-import Login from './pages/Login.jsx'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import Login from "./pages/Login";
+import AppLayout from "./layouts/AppLayout";
+import Employees from "./pages/Employees";
+import Placeholder from "./pages/Placeholder";
+
+const pages = [
+  ["dashboard", "Dashboard"],
+  ["payroll", "Payroll"],
+  ["time-attendance", "Time / Attendance"],
+  ["timesheet", "Timesheet"],
+  ["deductions", "Deductions"],
+  ["payslip", "Payslip"],
+];
+
+function LoginRoute() {
+  const navigate = useNavigate();
+  return (
+    <Login
+      onSignedIn={({ token, user }) => {
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+        navigate("/employees");
+      }}
+    />
+  );
+}
 
 export default function App() {
-  const [user, setUser] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('anl_user')) } catch { return null }
-  })
-
-  const handleSignedIn = ({ token, user }) => {
-    localStorage.setItem('anl_token', token)
-    localStorage.setItem('anl_user', JSON.stringify(user))
-    setUser(user)
-  }
-
-  const signOut = () => {
-    localStorage.removeItem('anl_token')
-    localStorage.removeItem('anl_user')
-    setUser(null)
-  }
-
-  if (!user) return <Login onSignedIn={handleSignedIn} />
-
-  // Placeholder until the dashboard is built (next step)
   return (
-    <div style={{ padding: 48 }}>
-      <h1>Signed in{user.name ? ` as ${user.name}` : ''}</h1>
-      <p>Dashboard coming in the next step.</p>
-      <button onClick={signOut}>Sign out</button>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route element={<AppLayout />}>
+          <Route path="/employees" element={<Employees />} />
+          {pages.map(([path, title]) => (
+            <Route key={path} path={`/${path}`} element={<Placeholder title={title} />} />
+          ))}
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }

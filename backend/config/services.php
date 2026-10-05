@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'resend_keys' => [
+    env('RESEND_EMAIL_1') => env('RESEND_KEY_1'),
+    env('RESEND_EMAIL_2') => env('RESEND_KEY_2'),
+],
+
 ];
