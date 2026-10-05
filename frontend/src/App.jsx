@@ -11,6 +11,10 @@ const pages = [
   ["timesheet", "Timesheet"],
   ["deductions", "Deductions"],
   ["payslip", "Payslip"],
+  ["payment", "Payment"],
+  ["compensation", "Compensation"],
+  ["claims", "Claims & Reimbursement"],
+  ["hmo-benefits", "HMO & Benefits"],
 ];
 
 function LoginRoute() {
@@ -30,7 +34,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<LoginRoute />} />
         <Route element={<AppLayout />}>
           <Route path="/employees" element={<Employees />} />
           {pages.map(([path, title]) => (

@@ -1,16 +1,16 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
 
 export default function AppLayout() {
-  // TODO: replace with your real auth check
-  const authed = !!localStorage.getItem("token");
-  if (!authed) return <Navigate to="/" replace />;
-
   return (
-    <div className="flex h-screen bg-[#edf0f7] font-sans">
+    <div className="flex min-h-screen bg-[#eef1f6] font-sans text-slate-800">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
-        <Outlet />
+        <Topbar />
+        <main className="p-6">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

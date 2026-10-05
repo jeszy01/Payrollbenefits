@@ -1,5 +1,5 @@
 import {
-  LayoutGrid, Users, Wallet, Landmark, BarChart3, FileText,
+  LayoutGrid, Users, Wallet, Landmark, BarChart3, FileText, HeartPulse,
 } from "lucide-react";
 
 export const overview = [
@@ -19,7 +19,12 @@ export const modules = [
       { label: "Payslip", to: "/payslip" },
     ],
   },
-  { label: "Payment", icon: Landmark, children: [] },
-  { label: "Compensation", icon: BarChart3, children: [] },
-  { label: "Claims & Reimbursement", icon: FileText, children: [] },
+  { label: "Payment", to: "/payment", icon: Landmark },
+  { label: "Compensation", to: "/compensation", icon: BarChart3 },
+  { label: "Claims & Reimbursement", to: "/claims", icon: FileText },
+  { label: "HMO & Benefits", to: "/hmo-benefits", icon: HeartPulse },
 ];
+
+export const titles = Object.fromEntries(
+  [...overview, ...modules.flatMap((m) => m.children ?? [m])].map((i) => [i.to, i.label])
+);
