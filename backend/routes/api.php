@@ -10,3 +10,4 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/auth/verify-otp', [AuthController::class, 'verify'])->middleware('throttle:5,1');
+
