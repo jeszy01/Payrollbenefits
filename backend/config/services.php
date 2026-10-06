@@ -40,4 +40,12 @@ return [
     env('RESEND_EMAIL_2') => env('RESEND_KEY_2'),
 ],
 
+'resend_keys' => collect(explode(',', env('RESEND_KEYS', '')))
+    ->filter(fn ($p) => str_contains($p, ':'))
+    ->mapWithKeys(function ($p) {
+        [$email, $key] = explode(':', trim($p), 2);
+        return [strtolower(trim($email)) => trim($key)];
+    })
+    ->all(),
+
 ];
