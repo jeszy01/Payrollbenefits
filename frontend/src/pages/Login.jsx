@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Eye, EyeOff, Lock, Loader2 } from 'lucide-react'
-import { login } from '../api.js'
+import { login, verifyOtp } from '../api.js'
 import './Login.css'
 
 export default function Login({ onSignedIn }) {
