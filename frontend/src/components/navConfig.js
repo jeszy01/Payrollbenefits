@@ -17,6 +17,7 @@ export const modules = [
       { label: "Timesheet", to: "/timesheet" },
       { label: "Deductions", to: "/deductions" },
       { label: "Payslip", to: "/payslip" },
+      { label: "Payroll Summary", to: "/payroll-summary" },
     ],
   },
   { label: "Payment", to: "/payment", icon: Landmark },

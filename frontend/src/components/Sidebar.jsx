@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Atom, ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { overview, modules } from "./navConfig";
 
 const base =
@@ -60,8 +60,8 @@ export default function Sidebar() {
   return (
     <aside className="sticky top-0 h-screen w-[210px] shrink-0 overflow-y-auto bg-[#12224b] px-2.5 py-3.5 text-white">
       <div className="flex items-center gap-2.5 px-1.5 pb-4 pt-1">
-        <div className="grid h-[34px] w-[34px] place-items-center rounded-[9px] bg-white">
-          <Atom size={22} color="#f08a24" />
+        <div className="grid h-[40px] w-[40px] shrink-0 place-items-center overflow-hidden rounded-[10px] bg-white p-0.5">
+          <img src="/logo.png" alt="" className="h-full w-full object-contain" />
         </div>
         <div>
           <div className="text-[13px] font-bold">ARCHON NELL INC.</div>

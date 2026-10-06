@@ -3,18 +3,20 @@ import Login from "./pages/Login";
 import AppLayout from "./layouts/AppLayout";
 import Employees from "./pages/Employees";
 import Placeholder from "./pages/Placeholder";
+import HmoBenefits from "./pages/HmoBenefits";
+import Payroll from "./pages/Payroll";
+import Deductions from "./pages/Deductions";
+import Compensation from "./pages/Compensation";
+import TimeAttendance from "./pages/TimeAttendance";
+
 
 const pages = [
   ["dashboard", "Dashboard"],
-  ["payroll", "Payroll"],
-  ["time-attendance", "Time / Attendance"],
   ["timesheet", "Timesheet"],
-  ["deductions", "Deductions"],
   ["payslip", "Payslip"],
-  ["payment", "Payment"],
-  ["compensation", "Compensation"],
+   ["payroll-summary", "Payroll Summary"],
   ["claims", "Claims & Reimbursement"],
-  ["hmo-benefits", "HMO & Benefits"],
+
 ];
 
 function LoginRoute() {
@@ -35,8 +37,15 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginRoute />} />
-        <Route element={<AppLayout />}>
+                <Route element={<AppLayout />}>
           <Route path="/employees" element={<Employees />} />
+                   <Route path="/payroll" element={<Payroll />} />
+                   <Route path="/deductions" element={<Deductions />} />
+          <Route path="/compensation" element={<Compensation />} />
+          <Route path="/time-attendance" element={<TimeAttendance />} />
+          
+          <Route path="/hmo-benefits" element={<HmoBenefits />} />
+          
           {pages.map(([path, title]) => (
             <Route key={path} path={`/${path}`} element={<Placeholder title={title} />} />
           ))}
