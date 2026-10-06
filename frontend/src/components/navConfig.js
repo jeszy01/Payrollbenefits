@@ -1,5 +1,5 @@
 import {
-  LayoutGrid, Users, Wallet, Landmark, BarChart3, FileText, HeartPulse,
+  LayoutGrid, Users, Wallet, BarChart3, FileText, HeartPulse,
 } from "lucide-react";
 
 export const overview = [
@@ -20,7 +20,7 @@ export const modules = [
       { label: "Payroll Summary", to: "/payroll-summary" },
     ],
   },
-  { label: "Payment", to: "/payment", icon: Landmark },
+ 
   { label: "Compensation", to: "/compensation", icon: BarChart3 },
   { label: "Claims & Reimbursement", to: "/claims", icon: FileText },
   { label: "HMO & Benefits", to: "/hmo-benefits", icon: HeartPulse },
