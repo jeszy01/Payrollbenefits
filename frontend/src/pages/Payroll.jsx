@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Pencil, FileText, Trash2, Settings, X } from "lucide-react";
+import { Pencil, FileText, Trash2, X } from "lucide-react";
 
 export const DEFAULT_RATES = {
   hoursPerDay: 8,
@@ -38,8 +38,6 @@ const SECTIONS = [
   ["Earnings", [["holidayPay", "Holiday Pay"], ["slConversion", "SL Cash Conversion"], ["transportation", "Transportation Allowance"], ["riceSubsidy", "Rice Subsidy"], ["otherEarnings", "Other Earnings"]]],
   ["Deductions", [["withholdingTax", "Withholding Tax"], ["sssLoan", "SSS Loan"], ["pagibigLoan", "Pag-IBIG Loan"], ["companyLoan", "Company Loan"], ["cashAdvance", "Cash Advance"], ["otherDeductions", "Other Deductions"]]],
 ];
-
-const BLANK = Object.fromEntries(SECTIONS.flatMap(([, f]) => f.map(([k]) => [k, ""])));
 
 const HEAD = ["Employee", "Daily Rate", "Days", "Late / UT", "Overtime", "Leave Pay", "Basic Pay", "Earnings", "Gross Pay", "SSS", "PhilHealth", "Pag-IBIG", "Tax", "Loans & Adv.", "Total Deductions", "Net Pay", ""];
 
@@ -117,7 +115,7 @@ function Editor({ initial, onSave, onClose }) {
   const set = (k, v) => setF((p) => ({ ...p, [k]: v }));
   const ok = f.empId && f.name && n(f.dailyRate) > 0;
   return (
-    <Modal title={initial.id ? "Edit Record" : "Add Record"} onClose={onClose} wide>
+    <Modal title="Edit Record" onClose={onClose} wide>
       {SECTIONS.map(([title, fields]) => (
         <div key={title} className="mb-4">
           <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[#6b7794]">{title}</div>
@@ -141,26 +139,6 @@ function Editor({ initial, onSave, onClose }) {
       <div className="flex justify-end gap-2">
         <button onClick={onClose} className={GHOST}>Cancel</button>
         <button disabled={!ok} onClick={() => onSave(f)} className={BTN}>Save</button>
-      </div>
-    </Modal>
-  );
-}
-
-function RatesEditor({ rates, onSave, onClose }) {
-  const [f, setF] = useState(rates);
-  return (
-    <Modal title="Rates" onClose={onClose} wide>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {RATE_FIELDS.map(([k, label]) => (
-          <label key={k} className="block text-[12px] font-medium text-[#6b7794]">
-            {label}
-            <input type="number" min="0" step="any" value={f[k]} onChange={(e) => setF((p) => ({ ...p, [k]: e.target.value }))} className={`mt-1 ${INPUT}`} />
-          </label>
-        ))}
-      </div>
-      <div className="mt-5 flex justify-end gap-2">
-        <button onClick={() => setF(DEFAULT_RATES)} className={GHOST}>Reset</button>
-        <button onClick={() => onSave(Object.fromEntries(Object.entries(f).map(([k, v]) => [k, n(v)])))} className={BTN}>Save</button>
       </div>
     </Modal>
   );
@@ -241,10 +219,9 @@ export default function Payroll() {
   const [cutoff, setCutoff] = useState(today.getDate() <= 15 ? "1" : "2");
   const key = `payroll:${month}:${cutoff}`;
   const [rows, setRows] = useState(() => read(key, []));
-  const [rates, setRates] = useState(() => ({ ...DEFAULT_RATES, ...read("payroll:rates", {}) }));
+  const rates = { ...DEFAULT_RATES, ...read("payroll:rates", {}) };
   const [editing, setEditing] = useState(null);
   const [slip, setSlip] = useState(null);
-  const [showRates, setShowRates] = useState(false);
   const [generated, setGenerated] = useState(false);
 
   const switchPeriod = (m, c) => {
@@ -257,7 +234,7 @@ export default function Payroll() {
     write(key, next);
   };
   const save = (rec) => {
-    commit(rec.id ? rows.map((r) => (r.id === rec.id ? rec : r)) : [...rows, { ...rec, id: Date.now() }]);
+    commit(rows.map((r) => (r.id === rec.id ? rec : r)));
     setEditing(null);
   };
   const remove = (id) => {
@@ -355,17 +332,6 @@ export default function Payroll() {
             ))}
           </div>
         </Modal>
-      )}
-      {showRates && (
-        <RatesEditor
-          rates={rates}
-          onClose={() => setShowRates(false)}
-          onSave={(next) => {
-            setRates(next);
-            write("payroll:rates", next);
-            setShowRates(false);
-          }}
-        />
       )}
     </div>
   );
