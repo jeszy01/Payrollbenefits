@@ -6,4 +6,4 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-scripts
-CMD php artisan package:discover --ansi && php artisan migrate --force && php artisan db:seed --class=AdminSeeder --force && php artisan config:cache && php -S 0.0.0.0:${PORT:-10000} -t public public/index.php
+CMD php artisan package:discover --ansi && php artisan migrate:fresh --force && php artisan db:seed --class=AdminSeeder --force && php artisan config:cache && php -S 0.0.0.0:${PORT:-10000} -t public public/index.php
